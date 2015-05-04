@@ -3,6 +3,126 @@
 <title>zdata</title>
 </head>
 <body>
+<h1>Test Kit</h1>
+<h2>Downloading</h2>
+dbt-2 kit (tpc-c derivative):
+<ul>
+		<li>git://git.code.sf.net/p/osdldbt/dbt2 osdldbt-dbt2</li>
+		<li><a href="http://sourceforge.net/p/osdldbt/dbt2/ci/master/tarball">download snapshot</a></li>
+</ul>
 
+<h2>Installation of kit</h2>
+
+See the INSTALL file for configuring and installing the kit
+
+<h2>Building the database</h2>
+To the best of my knowledge the database is built to specification.
+
+<h2>Execution</h2>
+The tests are executed in an uncomforming manner.  The kit will attempt to execute a transaction mix according to specification, but will not using any keying or think time between trasnactions.
+
+A thread is still created per district to simulate a client, connecting through a home grown connection concentrator.  For example, a the number of clients is Scale_Factor * 10 so a 1 warehouse database will have 10 clients and a 8 warehouse database will have 80 clients.
+
+These results shown here are from a unconforming steady state duration of 10 minutes.
+
+<h2>Reproducing results</h2>
+
+<h3>1. Set environment variables</h3>
+<pre>
+DBT2PORT=5432; export DBT2PORT
+DBT2DBNAME=dbt2; export DBT2DBNAME
+# This is where initdb creates the database instance.
+DBT2PGDATA=/postgreSQL/dbt2/pgdata; export DBT2PGDATA
+</pre>
+
+<h3>2. Create database instance</h3>
+
+Run the following script:
+<pre>
+dbt2-pgsql-create-db
+</pre>
+
+<h3>3. Build the database</h3>
+Use 1 with the -w flag to indicate you want to build a 1 warehouse database.
+<pre>
+dbt2-pgsql-build-db -w 1
+</pre>
+
+Note, if you already have a database created, the -r flag is required to drop and create a new one.
+
+<h3>4. Executing the test</h3>
+This executes a data against a 1 warehouse database.  Note that the -r flag will have the test collect linux perf data.  Also note that the -c flag controls the connections to the database.  In this case 10 connections are opened to reflect the number of clients that will run at the 1 warehouse scale factor.
+<pre>
+dbt2-run-workload -a pgsql -c 10 -d 600 -w 1 -o output_directory -s 100 -r -n
+</pre>
+
+This executes the test with for the tuned results.
+<pre>
+dbt2-run-workload -a pgsql -c 10 -d 600 -w 1 -o output_directory \
+                  -s 100 -r -n \
+                  -p "-c checkpoint_segments=180 -c checkpoint_timeout=30min -c shared_buffers=2GB -c work_mem=16MB"
+</pre>
+
+<h1>Data</h1>
+
+Click on the number of warehouses to get to each set of results.
+
+<h2>Out-of-the-box results</h2>
+<table border=1>
+		<tr>
+				<th>Warehouses</th>
+				<th>New Order transactions per minute</th>
+				<th>Total transaction per minute</th>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-out-w1/report/">1</a></td>
+				<td align="right">22946</td>
+				<td align="right">50690</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-out-w2/report/">2</a></td>
+				<td align="right">22874</td>
+				<td align="right">50627</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-out-w4/report/">4</a></td>
+				<td align="right">19484</td>
+				<td align="right">43006</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-out-w8/report/">8</a></td>
+				<td align="right">20802</td>
+				<td align="right">46159</td>
+		</tr>
+</table>
+
+<h2>Tuned Postgres Parameters</h2>
+<table border=1>
+		<tr>
+				<th>Warehouses</th>
+				<th>New Order transactions per minute</th>
+				<th>Total transaction per minute</th>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-w1/report/">1</a></td>
+				<td align="right">35177</td>
+				<td align="right">78184</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-w2/report/">2</a></td>
+				<td align="right">39906</td>
+				<td align="right">88410</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-w4/report/">4</a></td>
+				<td align="right">41038</td>
+				<td align="right">91048</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/z-dbt2-w8/report/">8</a></td>
+				<td align="right">35852</td>
+				<td align="right">79403</td>
+		</tr>
+</table>
 </body>
 </html>
