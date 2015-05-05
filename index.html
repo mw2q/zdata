@@ -3,7 +3,75 @@
 <title>zdata</title>
 </head>
 <body>
-<h1>Test Kit</h1>
+<h1>pgbench</h1>
+<h2>Executing pgbench</h2>
+<h3>read-only and read-write tests</h3>
+<pre>
+pgbench-auto.py --no-memcheck --host localhost --duration 1800 --clients 1 2 4 6 8 --repeats 3 > bench.log 2>&1
+</pre>
+<h3>write only tests</h3>
+Download <a href="https://raw.githubusercontent.com/gregs1104/pgbench-tools/master/tests/insert.sql">insert.sql</a> to use in the write-only test.
+
+Only the small scale is used to focus on the having the test in-memory.
+<pre>
+for i in 1 2 4 6 8 12 16 20 24 28 32 36 44; do
+    pgbench -i -s 10 pgbench && \
+    pgbench -s 10 -c $i -j $i -T 1800 \
+            -f insert.sql pgbench | tee i$i-2.txt;
+done
+</pre>
+<h2>Tuned results</h2>
+Changed postgres parameters:
+<pre>
+shared_buffers = 512MB
+effective_io_concurrency = 16
+checkpoint_segments = 64
+effective_cache_size = 2GB
+</pre>
+
+<table border=1>
+		<tr>
+				<th>type</th><th>scale</th><th>1</th><th>2</th><th>4</th><th>6</th><th>8</th>
+				<th>12</th>
+				<th>16</th>
+				<th>20</th>
+				<th>23</th>
+				<th>28</th>
+				<th>32</th>
+				<th>36</th>
+				<th>44</th>
+</tr>
+<tr>
+		<td>ro</td><td>small</td><td>14991</td><td>29065</td><td>23809</td><td>21631</td><td>21257</td>
+</tr>
+<tr>
+		<td>ro</td><td>medium</td><td>13424</td><td>25800</td><td>20309</td><td>19466</td><td>18908</td>
+</tr>
+<tr>
+		<td>ro</td><td>large</td><td>269</td><td>497</td><td>820</td><td>1078</td><td>1280</td>
+</tr>
+<tr>
+		<td>rw</td><td>small</td><td>1315</td><td>2421</td><td>2762</td><td>2749</td><td>2728</td>
+</tr>
+<tr>
+		<td>rw</td><td>medium</td><td>1223</td><td>2151</td><td>2533</td><td>2562</td><td>2576</td>
+</tr>
+<tr></td>
+<td>rw</td><td>large</td><td>157</td><td>260</td><td>375</td><td>446</td><td>492</td>
+</tr>
+<tr>
+		<td>w</td><td>small</td><td>2858</td><td>3425</td><td>6478</td><td>9287</td><td>11606</td>
+		<td>15577</td>
+		<td>17289</td>
+		<td>17962</td>
+		<td>18308</td>
+		<td>18654</td>
+		<td>18812</td>
+		<td>19110</td>
+		<td>19039</td>
+</tr>
+</table>
+<h1>DBT2 Test Kit</h1>
 <h2>Downloading</h2>
 dbt-2 kit (tpc-c derivative):
 <ul>
