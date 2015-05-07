@@ -131,7 +131,7 @@ dbt2-run-workload -a pgsql -c 10 -d 600 -w 1 -o output_directory \
                   -p "-c checkpoint_segments=180 -c checkpoint_timeout=30min -c shared_buffers=2GB -c work_mem=16MB"
 </pre>
 
-<h1>Data</h1>
+<h1>BC12 Data</h1>
 
 Click on the number of warehouses to get to each set of results.
 
@@ -140,27 +140,22 @@ Click on the number of warehouses to get to each set of results.
 		<tr>
 				<th>Warehouses</th>
 				<th>New Order transactions per minute</th>
-				<th>Total transaction per minute</th>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-out-w1/report/">1</a></td>
 				<td align="right">22946</td>
-				<td align="right">50690</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-out-w2/report/">2</a></td>
 				<td align="right">22874</td>
-				<td align="right">50627</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-out-w4/report/">4</a></td>
 				<td align="right">19484</td>
-				<td align="right">43006</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-out-w8/report/">8</a></td>
 				<td align="right">20802</td>
-				<td align="right">46159</td>
 		</tr>
 </table>
 
@@ -169,28 +164,49 @@ Click on the number of warehouses to get to each set of results.
 		<tr>
 				<th>Warehouses</th>
 				<th>New Order transactions per minute</th>
-				<th>Total transaction per minute</th>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-w1/report/">1</a></td>
 				<td align="right">35177</td>
-				<td align="right">78184</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-w2/report/">2</a></td>
 				<td align="right">39906</td>
-				<td align="right">88410</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-w4/report/">4</a></td>
 				<td align="right">41038</td>
-				<td align="right">91048</td>
 		</tr>
 		<tr>
 				<td><a href="http://mw2q.github.io/z-dbt2-w8/report/">8</a></td>
 				<td align="right">35852</td>
-				<td align="right">79403</td>
 		</tr>
 </table>
+
+<h1>E5-2630 v3 Data</h1>
+<h2>Tuned Postgres Parameters</h2>
+<table border=1>
+		<tr>
+				<th>Warehouses</th>
+				<th>New Order transactions per minute</th>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/i-dbt2-w1/report/">1</a></td>
+				<td align="right">45036</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/i-dbt2-w2/report/">2</a></td>
+				<td align="right">86937</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/i-dbt2-w4/report/">4</a></td>
+				<td align="right">144759</td>
+		</tr>
+		<tr>
+				<td><a href="http://mw2q.github.io/i-dbt2-w8/report/">8</a></td>
+				<td align="right">110224</td>
+		</tr>
+</table>
+
 </body>
 </html>
